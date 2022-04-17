@@ -1,0 +1,15 @@
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\Microsoft.Azure.Documents.ServiceInterop.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\Cosmos.CRTCompat.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\Microsoft.Azure.Cosmos.ServiceInterop.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\RepositoryLayer.deps.json
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\RepositoryLayer.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\RepositoryLayer.pdb
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.csproj.AssemblyReference.cache
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.AssemblyInfoInputs.cache
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.AssemblyInfo.cs
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.csproj.CoreCompileInputs.cache
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\refint\RepositoryLayer.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.pdb
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\ref\RepositoryLayer.dll
