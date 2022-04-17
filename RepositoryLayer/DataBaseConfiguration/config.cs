@@ -1,8 +1,10 @@
 ﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,31 +13,63 @@ namespace RepositoryLayer.DataBaseConfiguration
 {
     public class config
     {
-        private readonly IConfiguration _toolsetting;
+        private IConfiguration _Toolsettings;
 
-        private Database database ;
-
-        private Container container;
-
-        private CosmosClient cosmosClient;
-
-
-
-
-        public config(IConfiguration _toolsetting)
+        public config(IConfiguration _Toolsettings)
         {
-            this._toolsetting = _toolsetting;
+            this._Toolsettings = _Toolsettings;
         }
 
-        public  async  void Appconfiguration()
-        {
-            var databaseName = this._toolsetting["Values:DataBaseId"];
-            var containerName = this._toolsetting["Values:ContainerId"];
-            //CosmosClient client = new DocumentClient(new Uri(this._toolsetting["Values:DocDbEndpoint"]), this._toolsetting["Values:DocDbMasterKey"]);
 
-            this.database = await this.cosmosClient.CreateDatabaseIfNotExistsAsync(databaseName);
-            this.container = await this.database.CreateContainerIfNotExistsAsync(containerName,"/Id");
+        public void Initialize()
+        {
+            DocumentClient client = new DocumentClient(new Uri(this._Toolsettings["Values:DocDbEndpoint"]), this._Toolsettings["Values:DocDbMasterKey"]);
             
+            CreateDatabaseIfNotExistsAsync(client).Wait();
+            CreateCollectionIfNotExistsAsync(client).Wait();
+        }
+
+        private async Task CreateCollectionIfNotExistsAsync(DocumentClient client)
+        {
+            try
+            {
+                await client.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(this._Toolsettings["Values:DataBaseId"]));
+            }
+            catch (DocumentClientException e)
+            {
+                if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    await client.CreateDatabaseAsync(new Microsoft.Azure.Documents.Database { Id = this._Toolsettings["Values:DataBaseId"] });
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        private  async Task CreateDatabaseIfNotExistsAsync(DocumentClient client)
+        {
+            try
+            {
+                await client.ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(this._Toolsettings["Values:DataBaseId"], this._Toolsettings["Values:ContainerId"]));
+            }
+            catch (DocumentClientException e)
+            {
+                if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    await client.CreateDocumentCollectionAsync(
+                        UriFactory.CreateDatabaseUri(this._Toolsettings["Values:DataBaseId"]),
+                        new DocumentCollection { Id = this._Toolsettings["Values:ContainerId"] });
+                        
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
     }
 }
+
+

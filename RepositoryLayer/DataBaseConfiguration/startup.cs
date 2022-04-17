@@ -34,7 +34,7 @@ namespace UserService
                 if(connectionString != null)
                 {
                     config con = new config(configuration);
-                    con.Appconfiguration();
+                    con.Initialize();
                 }
 
                 CosmosClientBuilder configurationBuilder = new CosmosClientBuilder(connectionString);

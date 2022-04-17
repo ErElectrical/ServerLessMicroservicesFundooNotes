@@ -13,3 +13,6 @@ C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug
 C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\refint\RepositoryLayer.dll
 C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.pdb
 C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\ref\RepositoryLayer.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\CommonLayer.dll
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\bin\Debug\net6.0\CommonLayer.pdb
+C:\Users\as\Desktop\ServerLessMicroservicesFundooNotes\RepositoryLayer\obj\Debug\net6.0\RepositoryLayer.csproj.CopyComplete
