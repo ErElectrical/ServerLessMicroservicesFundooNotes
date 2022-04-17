@@ -13,7 +13,7 @@ namespace RepositoryLayer.DataBaseConfiguration
     {
         private readonly IConfiguration _toolsetting;
 
-        private Database database;
+        private Database database ;
 
         private Container container;
 

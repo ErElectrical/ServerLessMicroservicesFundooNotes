@@ -9,6 +9,8 @@ namespace RepositoryLayer.Interface
 {
     public interface IUserRL
     {
-        Task<UserDetails> createUser(UserDetails details);
+        Task createUser(UserDetails details);
+
+        bool UserLogin(LoginDetails details);
     }
 }
