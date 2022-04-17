@@ -26,7 +26,7 @@ namespace UserRegistration.Model
         public string Password { get; set; } = " ";
 
         [JsonProperty(PropertyName = "CreatedAt")]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
         [JsonProperty(PropertyName = "ModifiedAt")]
         public DateTime? ModifiedAt { get; set; }
