@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonLayer.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,7 @@ namespace RepositoryLayer.Interface
         Task createUser(UserDetails details);
 
         bool UserLogin(LoginDetails details);
+
+        Task<string> ForgetPassword(ForgetPasswordDetails details);
     }
 }

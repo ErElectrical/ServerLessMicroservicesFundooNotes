@@ -22,6 +22,27 @@
           "lib/net5.0/Azure.Core.dll": {}
         }
       },
+      "Experimental.System.Messaging/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Experimental.System.Messaging.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Experimental.System.Messaging.dll": {}
+        }
+      },
+      "JWT/8.9.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "compile": {
+          "lib/net6.0/JWT.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/JWT.dll": {}
+        }
+      },
       "Microsoft.Azure.Cosmos/3.26.1": {
         "type": "package",
         "dependencies": {
@@ -2270,6 +2291,52 @@
         "lib/netstandard2.0/Azure.Core.dll",
         "lib/netstandard2.0/Azure.Core.xml",
         "pkgicon.png"
+      ]
+    },
+    "Experimental.System.Messaging/1.1.0": {
+      "sha512": "vub7Mtt2WFdFKTZKECVuZx6feP5kUpS9EfVy+Yu4GDfdlMwivRdX4TbdkDYS2lKqCjqzUbnxTbJei1IOqC+CnA==",
+      "type": "package",
+      "path": "experimental.system.messaging/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "experimental.system.messaging.1.1.0.nupkg.sha512",
+        "experimental.system.messaging.nuspec",
+        "lib/netstandard2.0/Experimental.System.Messaging.dll",
+        "lib/netstandard2.0/Experimental.System.Messaging.xml"
+      ]
+    },
+    "JWT/8.9.0": {
+      "sha512": "XPj1//MhluGE3FsNDs5m0lK/6QoONbMQlClGEjfIbKxaNUuoAtL8qCNf1nr9khBtqWdg3ny6QAvqnyVcnmP7BA==",
+      "type": "package",
+      "path": "jwt/8.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "jwt.8.9.0.nupkg.sha512",
+        "jwt.nuspec",
+        "lib/net35/JWT.dll",
+        "lib/net35/JWT.pdb",
+        "lib/net35/JWT.xml",
+        "lib/net40/JWT.dll",
+        "lib/net40/JWT.pdb",
+        "lib/net40/JWT.xml",
+        "lib/net46/JWT.dll",
+        "lib/net46/JWT.pdb",
+        "lib/net46/JWT.xml",
+        "lib/net5.0/JWT.dll",
+        "lib/net5.0/JWT.pdb",
+        "lib/net5.0/JWT.xml",
+        "lib/net6.0/JWT.dll",
+        "lib/net6.0/JWT.pdb",
+        "lib/net6.0/JWT.xml",
+        "lib/netstandard1.3/JWT.dll",
+        "lib/netstandard1.3/JWT.pdb",
+        "lib/netstandard1.3/JWT.xml",
+        "lib/netstandard2.0/JWT.dll",
+        "lib/netstandard2.0/JWT.pdb",
+        "lib/netstandard2.0/JWT.xml"
       ]
     },
     "Microsoft.Azure.Cosmos/3.26.1": {
@@ -7383,6 +7450,8 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "CommonLayer >= 1.0.0",
+      "Experimental.System.Messaging >= 1.1.0",
+      "JWT >= 8.9.0",
       "Microsoft.Azure.Cosmos >= 3.26.1",
       "Microsoft.Azure.DocumentDB.Core >= 2.18.0",
       "Microsoft.Azure.Functions.Extensions >= 1.1.0"
@@ -7431,6 +7500,14 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Experimental.System.Messaging": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
+          "JWT": {
+            "target": "Package",
+            "version": "[8.9.0, )"
+          },
           "Microsoft.Azure.Cosmos": {
             "target": "Package",
             "version": "[3.26.1, )"

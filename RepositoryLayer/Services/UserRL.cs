@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using CommonLayer.Model;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents.Client;
 using RepositoryLayer.Interface;
 using System;
@@ -47,6 +48,11 @@ namespace RepositoryLayer.Services
             }
 
 
+        }
+
+        public Task<string> ForgetPassword(ForgetPasswordDetails details)
+        {
+            throw new NotImplementedException();
         }
 
         public bool UserLogin(LoginDetails details)
