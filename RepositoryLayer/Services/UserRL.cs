@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserRegistration.Authorisation;
 using UserRegistration.Model;
+using UserServices.Authorisation;
 
 namespace RepositoryLayer.Services
 {
@@ -50,10 +52,31 @@ namespace RepositoryLayer.Services
 
         }
 
-        public Task<string> ForgetPassword(ForgetPasswordDetails details)
+        public string ForgetPassword(ForgetPasswordDetails details)
         {
-            throw new NotImplementedException();
-        }
+            GenrateToken auth = new GenrateToken();
+            try
+            {
+
+                var option = new FeedOptions { EnableCrossPartitionQuery = true };
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("FundooNotesDb", "UserDetails");
+                var document = this.client.CreateDocumentQuery<UserDetails>(collectionUri, option).Where(t => t.Email == details.Email)
+                        .AsEnumerable().FirstOrDefault();
+                if (document != null)
+                {
+                    var token = auth.IssuingToken(document.Id.ToString());
+                    new MsMq().Sender(token);
+                    return token ;
+                }
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+
+        }    
 
         public bool UserLogin(LoginDetails details)
         {

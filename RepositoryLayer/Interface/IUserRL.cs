@@ -14,6 +14,6 @@ namespace RepositoryLayer.Interface
 
         bool UserLogin(LoginDetails details);
 
-        Task<string> ForgetPassword(ForgetPasswordDetails details);
+        string ForgetPassword(ForgetPasswordDetails details);
     }
 }
