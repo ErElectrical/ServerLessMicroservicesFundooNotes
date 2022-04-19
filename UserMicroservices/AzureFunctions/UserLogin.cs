@@ -33,9 +33,9 @@ namespace UserMicroservices.AzureFunctions
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 dynamic data = JsonConvert.DeserializeObject<LoginDetails>(requestBody);
                 var result = this.userRL.UserLogin(data);
-                if (result == true)
+                if (result != null)
                 {
-                    return new OkObjectResult(result.Resource);
+                    return new OkObjectResult(result);
                 }
                 return new BadRequestResult();
             }

@@ -16,12 +16,10 @@ namespace RepositoryLayer.Services
     public class UserRL : IUserRL
     {
         private readonly CosmosClient _cosmosClient;
-        private DocumentClient client;
 
-        public UserRL(CosmosClient _cosmosClient, DocumentClient client)
+        public UserRL(CosmosClient _cosmosClient)
         {
             this._cosmosClient = _cosmosClient;
-            this.client = client;
         }
         public async Task<UserDetails> createUser(UserDetails details)
         {
@@ -53,49 +51,54 @@ namespace RepositoryLayer.Services
 
         }
 
-        public string ForgetPassword(ForgetPasswordDetails details)
+        //public string ForgetPassword(ForgetPasswordDetails details)
+        //{
+        //    GenrateToken auth = new GenrateToken();
+        //    try
+        //    {
+
+        //        var option = new FeedOptions { EnableCrossPartitionQuery = true };
+        //        Uri collectionUri = UriFactory.CreateDocumentCollectionUri("FundooNotesDb", "UserDetails");
+        //        var document = this.client.CreateDocumentQuery<UserDetails>(collectionUri, option).Where(t => t.Email == details.Email)
+        //                .AsEnumerable().FirstOrDefault();
+        //        if (document != null)
+        //        {
+        //            var token = auth.IssuingToken(document.Id.ToString());
+        //            new MsMq().Sender(token);
+        //            return token ;
+        //        }
+        //        return string.Empty;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+
+        //    }
+
+        //}    
+
+        public string UserLogin(LoginDetails details)
         {
             GenrateToken auth = new GenrateToken();
+            
+
             try
             {
-
                 var option = new FeedOptions { EnableCrossPartitionQuery = true };
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("FundooNotesDb", "UserDetails");
-                var document = this.client.CreateDocumentQuery<UserDetails>(collectionUri, option).Where(t => t.Email == details.Email)
-                        .AsEnumerable().FirstOrDefault();
+
+                var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
+                var document = container.GetItemLinqQueryable<UserDetails>(true)
+                               .Where(b => b.Email == details.Email && b.Password == details.Password)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+
                 if (document != null)
                 {
                     var token = auth.IssuingToken(document.Id.ToString());
-                    new MsMq().Sender(token);
-                    return token ;
+                    return token;
                 }
                 return string.Empty;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-
-            }
-
-        }    
-
-        public bool UserLogin(LoginDetails details)
-        {
-            GenrateToken auth = new GenrateToken();
-
-            try
-            {
-                var option = new FeedOptions { EnableCrossPartitionQuery = true };
-
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("FundooNotesDb", "UserDetails");
-                var document = this.client.CreateDocumentQuery<UserDetails>(collectionUri, option).Where(t => t.Email == details.Email && t.Password == details.Password)
-                        .AsEnumerable().FirstOrDefault();
-
-                if (document != null)
-                {
-                    var token = auth.IssuingToken(document.Id.ToString());
-                }
-                return false;
+                
             }
             catch(Exception ex)
             {
