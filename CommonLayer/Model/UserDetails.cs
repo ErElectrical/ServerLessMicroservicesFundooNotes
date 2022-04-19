@@ -9,26 +9,20 @@ namespace UserRegistration.Model
 {
     public class UserDetails
     {
-        [JsonProperty(PropertyName = "Id")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; } = " ";
 
 
-        [JsonProperty(PropertyName = "FirstName")]
         public string FirstName { get; set; } = " ";
 
-        [JsonProperty(PropertyName = "LastName")]
         public string? LastName { get; set; }
 
-        [JsonProperty(PropertyName = "Email")]
         public string Email { get; set; } = " ";
 
-        [JsonProperty(PropertyName = "PassWord")]
         public string Password { get; set; } = " ";
 
-        [JsonProperty(PropertyName = "CreatedAt")]
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
-        [JsonProperty(PropertyName = "ModifiedAt")]
         public DateTime? ModifiedAt { get; set; }
 
     }

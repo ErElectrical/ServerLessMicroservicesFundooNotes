@@ -23,16 +23,17 @@ namespace RepositoryLayer.Services
             this._cosmosClient = _cosmosClient;
             this.client = client;
         }
-        public async Task createUser(UserDetails details)
+        public async Task<UserDetails> createUser(UserDetails details)
         {
+            if(details == null)
+            {
+                throw new NullReferenceException();
+            }
             try
             {
-
-
-                if (details != null)
-                {
                     var user = new UserDetails()
                     {
+                        Id = Guid.NewGuid().ToString(),
                         FirstName = details.FirstName,
                         LastName = details.LastName,
                         Email = details.Email,
@@ -41,8 +42,8 @@ namespace RepositoryLayer.Services
                     };
 
                     var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
-                    var result = await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
-                }
+                    return await container.CreateItemAsync<UserDetails>(user, new PartitionKey(user.Id));
+                
             }
             catch (Exception ex)
             {
@@ -80,6 +81,8 @@ namespace RepositoryLayer.Services
 
         public bool UserLogin(LoginDetails details)
         {
+            GenrateToken auth = new GenrateToken();
+
             try
             {
                 var option = new FeedOptions { EnableCrossPartitionQuery = true };
@@ -90,7 +93,7 @@ namespace RepositoryLayer.Services
 
                 if (document != null)
                 {
-                    return true;
+                    var token = auth.IssuingToken(document.Id.ToString());
                 }
                 return false;
             }

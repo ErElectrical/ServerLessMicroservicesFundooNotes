@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\as\\Desktop\\ServerLessMicroservicesFundooNotes\\CommonLayer\\CommonLayer.csproj": {}
+    "C:\\Users\\as\\Desktop\\ServerLessMicroServicesFundooNotes\\CommonLayer\\CommonLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\as\\Desktop\\ServerLessMicroservicesFundooNotes\\CommonLayer\\CommonLayer.csproj": {
+    "C:\\Users\\as\\Desktop\\ServerLessMicroServicesFundooNotes\\CommonLayer\\CommonLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\as\\Desktop\\ServerLessMicroservicesFundooNotes\\CommonLayer\\CommonLayer.csproj",
+        "projectUniqueName": "C:\\Users\\as\\Desktop\\ServerLessMicroServicesFundooNotes\\CommonLayer\\CommonLayer.csproj",
         "projectName": "CommonLayer",
-        "projectPath": "C:\\Users\\as\\Desktop\\ServerLessMicroservicesFundooNotes\\CommonLayer\\CommonLayer.csproj",
+        "projectPath": "C:\\Users\\as\\Desktop\\ServerLessMicroServicesFundooNotes\\CommonLayer\\CommonLayer.csproj",
         "packagesPath": "C:\\Users\\as\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\as\\Desktop\\ServerLessMicroservicesFundooNotes\\CommonLayer\\obj\\",
+        "outputPath": "C:\\Users\\as\\Desktop\\ServerLessMicroServicesFundooNotes\\CommonLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\as\\AppData\\Roaming\\NuGet\\NuGet.Config",

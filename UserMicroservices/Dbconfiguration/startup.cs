@@ -1,16 +1,17 @@
-﻿using System;
-using System.Reflection;
-using Microsoft.Azure.Cosmos.Fluent;
+﻿using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RepositoryLayer.DataBaseConfiguration;
+using RepositoryLayer.Interface;
+using RepositoryLayer.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-[assembly: FunctionsStartup(typeof(UserService.Startup))]
-
-namespace UserService
+[assembly: FunctionsStartup(typeof(UserMicroservices.Dbconfiguration.Startup))]
+namespace UserMicroservices.Dbconfiguration
 {
     public class Startup : FunctionsStartup
     {
@@ -26,12 +27,12 @@ namespace UserService
 
             builder.Services.AddSingleton((s) => {
 
-                var connectionString = configuration["CosmosDBConnection"];
+                var connectionString = configuration["Values:CosmosDBConnection"];
                 if (string.IsNullOrEmpty(connectionString))
                 {
                     throw new ArgumentNullException("Please specify a valid connection string in the local.settings.json file or your Azure Functions Settings.");
                 }
-                if(connectionString != null)
+                if (connectionString != null)
                 {
                     config con = new config(configuration);
                     con.Initialize();
@@ -41,10 +42,10 @@ namespace UserService
                 return configurationBuilder
                         .Build();
             });
+
+            builder.Services.AddTransient<IUserRL, UserRL>();
         }
 
 
     }
-
-
 }

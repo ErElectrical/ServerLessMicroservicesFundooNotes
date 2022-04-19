@@ -11,7 +11,7 @@ using UserRegistration.Model;
 using RepositoryLayer.Interface;
 using Microsoft.Azure.Cosmos;
 
-namespace UserServices.AzureFunctions
+namespace UserMicroservices.AzureFunctions
 {
     public  class UserRegistration
     {
@@ -24,7 +24,7 @@ namespace UserServices.AzureFunctions
 
         [FunctionName("UserRegistration")]
         public  async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous,  "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger UserRegistration function processed a request.");
@@ -37,7 +37,7 @@ namespace UserServices.AzureFunctions
                 dynamic data = JsonConvert.DeserializeObject<UserDetails>(requestBody);
 
                 var result = await this.userRL.createUser(data);
-                return new OkObjectResult(result.Resource);
+                return new OkObjectResult(result);
 
             }
             catch (CosmosException cosmosException)
@@ -49,8 +49,6 @@ namespace UserServices.AzureFunctions
 
 
             }
-            
-
         }
     }
 }

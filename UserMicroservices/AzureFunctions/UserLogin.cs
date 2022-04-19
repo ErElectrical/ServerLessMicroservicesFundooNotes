@@ -7,23 +7,23 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using CommonLayer.Model;
 using RepositoryLayer.Interface;
+using UserRegistration.Model;
 using Microsoft.Azure.Cosmos;
 
-namespace UserServices.AzureFunctions
+namespace UserMicroservices.AzureFunctions
 {
-    public  class ForgetPassword
+    public  class UserLogin
     {
         private IUserRL userRL;
 
-        public ForgetPassword(IUserRL userRL)
+        public UserLogin(IUserRL userRL)
         {
             this.userRL = userRL;
         }
-        [FunctionName("ForgetPassword")]
+        [FunctionName("UserLogin")]
         public  async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -31,10 +31,9 @@ namespace UserServices.AzureFunctions
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject<ForgetPasswordDetails>(requestBody);
-
-                var result = this.userRL.ForgetPassword(data);
-                if(result != null)
+                dynamic data = JsonConvert.DeserializeObject<LoginDetails>(requestBody);
+                var result = this.userRL.UserLogin(data);
+                if (result == true)
                 {
                     return new OkObjectResult(result.Resource);
                 }
@@ -46,9 +45,6 @@ namespace UserServices.AzureFunctions
                 log.LogError(" forget password failed with error {0}", cosmosException.ToString());
                 return new BadRequestObjectResult($"Failed to proced for forget password Cosmos Status Code {cosmosException.StatusCode}, Sub Status Code {cosmosException.SubStatusCode}: {cosmosException.Message}.");
             }
-
-
-
         }
     }
 }
