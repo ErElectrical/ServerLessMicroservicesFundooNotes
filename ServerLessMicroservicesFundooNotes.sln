@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLayer", "CommonLayer\CommonLayer.csproj", "{37E074EA-BC77-4DF1-8F89-BB5B67772649}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonLayer", "CommonLayer\CommonLayer.csproj", "{37E074EA-BC77-4DF1-8F89-BB5B67772649}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{7112F034-5C30-429C-A753-251DED81A140}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{7112F034-5C30-429C-A753-251DED81A140}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMicroservices", "UserMicroservices\UserMicroservices.csproj", "{68B541A0-13F6-43EF-9962-36C0D33072E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserMicroservices", "UserMicroservices\UserMicroservices.csproj", "{68B541A0-13F6-43EF-9962-36C0D33072E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

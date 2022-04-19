@@ -7,46 +7,50 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RepositoryLayer.Interface;
 using CommonLayer.Model;
+using RepositoryLayer.Interface;
 using Microsoft.Azure.Cosmos;
 
 namespace UserMicroservices.AzureFunctions
 {
-    public class ForgetPassword
+    public  class ResetPassword
     {
-
         private IUserRL userRL;
 
-        public ForgetPassword(IUserRL userRL)
+        public ResetPassword(IUserRL userRL)
         {
             this.userRL = userRL;
         }
-        [FunctionName("ForgetPassword")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        [FunctionName("ResetPassword")]
+        public  async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject<ForgetPasswordDetails>(requestBody);
 
-                var result = this.userRL.ForgetPassword(data);
-                if (result != null)
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject<ResetPassWordDetails>(requestBody);
+
+                var result = this.userRL.ResetPassword(data);
+                if (data != null)
                 {
                     return new OkObjectResult(result);
+
                 }
                 return new BadRequestResult();
             }
             catch (CosmosException cosmosException)
             {
 
-                log.LogError(" forget password failed with error {0}", cosmosException.ToString());
-                return new BadRequestObjectResult($"Failed to proced for forget password Cosmos Status Code {cosmosException.StatusCode}, Sub Status Code {cosmosException.SubStatusCode}: {cosmosException.Message}.");
+                log.LogError(" Reset password failed with error {0}", cosmosException.ToString());
+                return new BadRequestObjectResult($"Failed to proced for Reset password Cosmos Status Code {cosmosException.StatusCode}, Sub Status Code {cosmosException.SubStatusCode}: {cosmosException.Message}.");
             }
+
+
         }
     }
 }

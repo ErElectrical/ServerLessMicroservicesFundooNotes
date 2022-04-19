@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace CommonLayer.Model
 {
-    internal class ResetPassWordDetails
+    public class ResetPassWordDetails
     {
+        public string Email { get; set; } = " ";
+
+        public string Password { get; set; } = " ";
+
+        public string ConfirmPassword { get; set; } = " ";
+
     }
 }

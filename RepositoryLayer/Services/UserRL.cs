@@ -51,31 +51,67 @@ namespace RepositoryLayer.Services
 
         }
 
-        //public string ForgetPassword(ForgetPasswordDetails details)
-        //{
-        //    GenrateToken auth = new GenrateToken();
-        //    try
-        //    {
+        public string ForgetPassword(ForgetPasswordDetails details)
+        {
+            GenrateToken auth = new GenrateToken();
+            try
+            {
 
-        //        var option = new FeedOptions { EnableCrossPartitionQuery = true };
-        //        Uri collectionUri = UriFactory.CreateDocumentCollectionUri("FundooNotesDb", "UserDetails");
-        //        var document = this.client.CreateDocumentQuery<UserDetails>(collectionUri, option).Where(t => t.Email == details.Email)
-        //                .AsEnumerable().FirstOrDefault();
-        //        if (document != null)
-        //        {
-        //            var token = auth.IssuingToken(document.Id.ToString());
-        //            new MsMq().Sender(token);
-        //            return token ;
-        //        }
-        //        return string.Empty;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
+                var option = new FeedOptions { EnableCrossPartitionQuery = true };
+                var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
+                var document = container.GetItemLinqQueryable<UserDetails>(true)
+                               .Where(b => b.Email == details.Email )
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if (document != null)
+                {
+                    var token = auth.IssuingToken(document.Id.ToString());
+                    //new MsMq().Sender(token);
+                    return token;
+                }
+                return string.Empty;
+            }
+            catch (CosmosException ex)
+            {
+                throw new Exception(ex.Message);
 
-        //    }
+            }
 
-        //}    
+        }
+
+        public async Task<UserDetails> ResetPassword(ResetPassWordDetails details)
+        {
+            if(details == null)
+            {
+                throw new NullReferenceException();
+            }
+            try
+            {
+
+
+                if (details.Password.Equals(details.ConfirmPassword))
+                {
+                    var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
+                    var document = container.GetItemLinqQueryable<UserDetails>(true)
+                                   .Where(b => b.Email == details.Email)
+                                   .AsEnumerable()
+                                   .FirstOrDefault();
+                    if (document != null)
+                    {
+                        UserDetails user = new UserDetails();
+                        user.Password = details.Password;
+                        return await container.UpsertItemAsync<UserDetails>(user, new PartitionKey(document.Id));
+                    }
+
+                }
+                throw new NullReferenceException();
+            }
+            catch(CosmosException ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+        }
 
         public string UserLogin(LoginDetails details)
         {
