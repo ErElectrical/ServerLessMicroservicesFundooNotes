@@ -36,7 +36,7 @@ namespace UserMicroservices.AzureFunctions
                 dynamic data = JsonConvert.DeserializeObject<ResetPassWordDetails>(requestBody);
 
                 var result = this.userRL.ResetPassword(data);
-                if (data != null)
+                if(result != null)
                 {
                     return new OkObjectResult(result);
 

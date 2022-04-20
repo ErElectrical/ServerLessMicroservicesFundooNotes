@@ -98,10 +98,20 @@ namespace RepositoryLayer.Services
                                    .FirstOrDefault();
                     if (document != null)
                     {
-                        UserDetails user = new UserDetails();
-                        user.Password = details.Password;
-                        return await container.UpsertItemAsync<UserDetails>(user, new PartitionKey(document.Id));
+                        //UserDetails user = new UserDetails();
+                        //user.Id = document.Id;
+                        //user.Password = details.Password;
+                        //return await container.UpsertItemAsync<UserDetails>(user, new PartitionKey(document.Id));
+
+                        ItemResponse<UserDetails> response = await container.ReadItemAsync<UserDetails>(document.Id, new PartitionKey(document.Id));
+                        var itembody = response.Resource;
+                        itembody.Password = details.Password;
+                        itembody.CreatedAt = DateTime.Now;
+                        response = await container.ReplaceItemAsync<UserDetails>(itembody, itembody.Id, new PartitionKey(itembody.Id));
+                        return response.Resource;
+                        
                     }
+                    
 
                 }
                 throw new NullReferenceException();
