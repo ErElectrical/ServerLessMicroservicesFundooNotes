@@ -9,9 +9,9 @@ namespace CommonLayer.NotesModel
 {
     public class NoteDetails
     {
-        [JsonProperty(PropertyName = "noteid")]
+        [JsonProperty(PropertyName = "id")]
 
-        public Guid NoteId { get; set; }
+        public string NoteId { get; set; } = " ";
 
         public string Title { get; set; } = " ";
 

@@ -10,5 +10,7 @@ namespace RepositoryLayer.Interface
     public interface INoteRL
     {
         Task<NoteDetails> CreateNote(NoteDetails details);
+
+        Task<List<NoteDetails>> GetAllNotes();
     }
 }

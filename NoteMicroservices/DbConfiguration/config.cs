@@ -38,7 +38,7 @@ namespace NoteMicroservices.DbConfiguration
             {
                 if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    PartitionKeyDefinition pkDefn = new PartitionKeyDefinition() { Paths = new Collection<string>() { "/noteid" } };
+                    PartitionKeyDefinition pkDefn = new PartitionKeyDefinition() { Paths = new Collection<string>() { "/id" } };
 
                     await client.CreateDocumentCollectionAsync(
                         UriFactory.CreateDatabaseUri(this._Toolsettings["Values:DataBaseId"]),
