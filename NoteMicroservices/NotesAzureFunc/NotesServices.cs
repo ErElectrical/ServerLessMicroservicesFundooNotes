@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using RepositoryLayer.Interface;
 using CommonLayer.NotesModel;
 using Microsoft.Azure.Cosmos;
+using RepositoryLayer.Authorisation;
 
 namespace NoteMicroservices.NotesAzureFunc
 {
@@ -17,12 +18,15 @@ namespace NoteMicroservices.NotesAzureFunc
     {
         private INoteRL noteRL;
 
-        public NotesServices(INoteRL noteRL)
+        private readonly ITokenServices jwt;
+
+        public NotesServices(INoteRL noteRL, ITokenServices jwt)
         {
             this.noteRL = noteRL;
+            this.jwt = jwt;
         }
         [FunctionName("CreateNotes")]
-        public async Task<IActionResult> Run(
+        public async Task<IActionResult> CreateNotes(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {

@@ -12,10 +12,12 @@ namespace RepositoryLayer.Interface
     {
          Task<UserDetails> createUser(UserDetails details);
 
-         string UserLogin(LoginDetails details);
+         LoginCredentials UserLogin(LoginDetails details);
 
          string ForgetPassword(ForgetPasswordDetails details);
 
         Task<UserDetails> ResetPassword(ResetPassWordDetails details);
+
+        UserDetails GetDetailsById(string Id);
     }
 }

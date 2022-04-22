@@ -1,11 +1,13 @@
 ﻿using CommonLayer.NotesModel;
 using Microsoft.Azure.Cosmos;
+using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserRegistration.Model;
 
 namespace RepositoryLayer.Services
 {
@@ -13,16 +15,24 @@ namespace RepositoryLayer.Services
     {
         private readonly CosmosClient _cosmosClient;
 
-        public NoteRL(CosmosClient _cosmosClient)
+        private readonly ITokenServices jwt;
+
+        private IUserRL userRL;
+
+        public NoteRL(CosmosClient _cosmosClient, ITokenServices jwt, IUserRL userRL)
         {
             this._cosmosClient = _cosmosClient;
+            this.jwt = jwt;
+            this.userRL = userRL;
         }
-        public async Task<NoteDetails> CreateNote(NoteDetails details)
+        public async Task<NoteDetails> CreateNote(NoteDetails details,string userId)
         {
             if (details == null)
             {
                 throw new NullReferenceException();
             }
+
+            UserDetails user = this.userRL.GetDetailsById(userId);
 
             try
             {
@@ -38,6 +48,7 @@ namespace RepositoryLayer.Services
                     IsPinned = details.IsPinned,
                     IsTrash = details.IsTrash,
                     CreatedAt = DateTime.Now,
+                    UserDetails = user
 
                     
                 };
@@ -46,6 +57,26 @@ namespace RepositoryLayer.Services
                 return await container.CreateItemAsync<NoteDetails>(notes, new PartitionKey(notes.NoteId));
             }
             catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<NoteDetails>> GetAllFundooNotesById(string id, string email)
+        {
+            List<NoteDetails> notes = new List<NoteDetails>();
+            var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+            try
+            {
+                NoteDetails note = await container.ReadItemAsync<NoteDetails>(id, new PartitionKey(id));
+                if(note != null)
+                {
+                    notes.Add(note);
+                }
+                return notes;
+
+            }
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -81,6 +112,11 @@ namespace RepositoryLayer.Services
                 throw new Exception(ex.Message);
 
             }
+        }
+
+        public Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

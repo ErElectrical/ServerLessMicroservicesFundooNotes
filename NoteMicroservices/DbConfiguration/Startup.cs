@@ -2,6 +2,7 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
 using System;
@@ -44,6 +45,8 @@ namespace NoteMicroservices.DbConfiguration
             });
 
             builder.Services.AddTransient<INoteRL, NoteRL>();
+            builder.Services.AddTransient<ITokenServices, TokenServices>();
+            builder.Services.AddTransient<IUserRL, UserRL>();
 
 
         }

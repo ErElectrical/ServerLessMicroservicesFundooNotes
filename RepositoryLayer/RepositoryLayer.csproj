@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Experimental.System.Messaging" Version="1.1.0" />
     <PackageReference Include="JWT" Version="8.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.26.1" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />

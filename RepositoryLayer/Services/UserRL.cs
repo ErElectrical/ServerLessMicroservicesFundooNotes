@@ -1,13 +1,13 @@
 ﻿using CommonLayer.Model;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents.Client;
+using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UserRegistration.Authorisation;
 using UserRegistration.Model;
 using UserServices.Authorisation;
 
@@ -16,10 +16,12 @@ namespace RepositoryLayer.Services
     public class UserRL : IUserRL
     {
         private readonly CosmosClient _cosmosClient;
+        private readonly ITokenServices jwt;
 
-        public UserRL(CosmosClient _cosmosClient)
+        public UserRL(CosmosClient _cosmosClient, ITokenServices jwt)
         {
             this._cosmosClient = _cosmosClient;
+            this.jwt = jwt;
         }
         public async Task<UserDetails> createUser(UserDetails details)
         {
@@ -53,7 +55,6 @@ namespace RepositoryLayer.Services
 
         public string ForgetPassword(ForgetPasswordDetails details)
         {
-            GenrateToken auth = new GenrateToken();
             try
             {
 
@@ -65,7 +66,7 @@ namespace RepositoryLayer.Services
                                .FirstOrDefault();
                 if (document != null)
                 {
-                    var token = auth.IssuingToken(document.Id.ToString());
+                    var token = this.jwt.GetToken(document.Id, document.Email);
                     //new MsMq().Sender(token);
                     return token;
                 }
@@ -123,28 +124,62 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public string UserLogin(LoginDetails details)
+        public LoginCredentials UserLogin(LoginDetails details)
         {
-            GenrateToken auth = new GenrateToken();
-            
+            LoginCredentials login = new LoginCredentials();
 
             try
             {
                 var option = new FeedOptions { EnableCrossPartitionQuery = true };
 
                 var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
-                var document = container.GetItemLinqQueryable<UserDetails>(true)
+                var document =  container.GetItemLinqQueryable<UserDetails>(true)
                                .Where(b => b.Email == details.Email && b.Password == details.Password)
                                .AsEnumerable()
                                .FirstOrDefault();
-
+                
+                
                 if (document != null)
                 {
-                    var token = auth.IssuingToken(document.Id.ToString());
-                    return token;
+                    login.userDetails = document;
+                    login.token = this.jwt.GetToken(login.userDetails.Id, login.userDetails.Email);
+                    return login;
+                        
                 }
-                return string.Empty;
+                return login;
+
                 
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public UserDetails GetDetailsById(string Id)
+        {
+            UserDetails user = new UserDetails();
+            try
+            {
+                var option = new FeedOptions { EnableCrossPartitionQuery = true };
+
+                var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
+                var document = container.GetItemLinqQueryable<UserDetails>(true)
+                               .Where(b => b.Id == Id)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    user.Id = document.Id;
+                    user.FirstName = document.FirstName;
+                    user.LastName = document.LastName;
+                    user.Email = document.Email;
+                    user.Password = document.Password;
+                    user.CreatedAt = document.CreatedAt;
+                    user.ModifiedAt = document.ModifiedAt;
+
+                }
+                return user;
             }
             catch(Exception ex)
             {
