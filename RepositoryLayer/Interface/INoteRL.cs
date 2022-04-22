@@ -18,6 +18,10 @@ namespace RepositoryLayer.Interface
         Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId);
 
         Task<bool> DeleteNote(string noteId);
+
+        Task<bool> IsPinned(string userId, string noteId);
+
+        Task<bool> IsTrash(string userId, string noteId);
     }
 
 }

@@ -163,6 +163,84 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public async Task<bool> IsPinned(string userId, string noteId)
+        {
+            if(userId == null || noteId == null)
+            {
+                throw new Exception("please pass userId and noteId compulsary ");
+            }
+            try
+            {
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    ItemResponse<NoteDetails> response = await container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+
+                    if(document.IsPinned == true)
+                    {
+                        itembody.IsPinned = false;
+                    }
+                    if(document.IsPinned == false)
+                    {
+                        itembody.IsPinned = true;
+                    }
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+
+                    return true;
+
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> IsTrash(string userId, string noteId)
+        {
+           if(userId == null || noteId == null)
+           {
+                throw new Exception("please pass userId and noteId compulsary ");
+           }
+           try
+           {
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if (document != null)
+                {
+                    ItemResponse<NoteDetails> response = await container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+
+                    if (document.IsTrash == true)
+                    {
+                        itembody.IsTrash = false;
+                    }
+                    if (document.IsTrash == false)
+                    {
+                        itembody.IsTrash = true;
+                    }
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+
+                    return true;
+
+                }
+                return false;
+            }
+           catch(Exception ex)
+           {
+                throw new Exception(ex.Message);
+           }
+        }
+
         public async Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId)
         {
             if (update == null)
