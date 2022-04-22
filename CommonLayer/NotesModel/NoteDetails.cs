@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CommonLayer.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,8 @@ namespace CommonLayer.NotesModel
 
         public DateTime? ModifiedAt { get; set; }
 
-        public UserDetails UserDetails { get; set; }
+        public string userId { get; set; } = " ";
 
+        public string Email { get; set; } = " ";
     }
 }

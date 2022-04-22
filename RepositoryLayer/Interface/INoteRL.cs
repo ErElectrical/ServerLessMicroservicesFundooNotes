@@ -13,9 +13,11 @@ namespace RepositoryLayer.Interface
 
         Task<List<NoteDetails>> GetAllNotes();
 
-        Task<List<NoteDetails>> GetAllFundooNotesById(string id,string email);
+        Task<List<NoteDetails>> GetAllFundooNotesByUserId(string id, string email);
 
         Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId);
+
+        Task<bool> DeleteNote(string noteId);
     }
 
 }

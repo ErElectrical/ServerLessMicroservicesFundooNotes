@@ -1,4 +1,5 @@
-﻿using CommonLayer.NotesModel;
+﻿using CommonLayer.Model;
+using CommonLayer.NotesModel;
 using Microsoft.Azure.Cosmos;
 using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
@@ -25,15 +26,15 @@ namespace RepositoryLayer.Services
             this.jwt = jwt;
             this.userRL = userRL;
         }
-        public async Task<NoteDetails> CreateNote(NoteDetails details,string userId)
+        public async Task<NoteDetails> CreateNote(NoteDetails details, string userId)
         {
             if (details == null)
             {
                 throw new NullReferenceException();
             }
 
-            UserDetails user = this.userRL.GetDetailsById(userId);
-
+            UserDetails res = this.userRL.GetDetailsById(userId);
+            
             try
             {
                 var notes = new NoteDetails()
@@ -48,7 +49,10 @@ namespace RepositoryLayer.Services
                     IsPinned = details.IsPinned,
                     IsTrash = details.IsTrash,
                     CreatedAt = DateTime.Now,
-                    UserDetails = user
+                    userId = res.Id,
+                    Email = res.Email
+                    
+                    
 
                     
                 };
@@ -62,19 +66,64 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<List<NoteDetails>> GetAllFundooNotesById(string id, string email)
+        public async Task<bool> DeleteNote(string noteId)
         {
-            List<NoteDetails> notes = new List<NoteDetails>();
-            var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+            if(noteId == null )
+            {
+                throw new NullReferenceException();
+            }
             try
             {
-                NoteDetails note = await container.ReadItemAsync<NoteDetails>(id, new PartitionKey(id));
-                if(note != null)
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+
+                using (ResponseMessage response =  await container.DeleteItemStreamAsync(noteId, new PartitionKey(noteId)))
                 {
-                    notes.Add(note);
+                    if(response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
+
+                   
+
+
+            }
+            catch(CosmosException ex )
+            {
+                throw new Exception(ex.Message);
+            }
+
+             
+        }
+
+        public async Task<List<NoteDetails>> GetAllFundooNotesByUserId(string id, string email)
+        {
+            List<NoteDetails> notes = new List<NoteDetails>();
+            try
+            {
+                QueryDefinition sqldefn = new QueryDefinition(
+                    "select * from c where c.userId = @id and c.Email = @email")
+                    .WithParameter("@id", id)
+                    .WithParameter("@email", email);
+
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                using FeedIterator<NoteDetails> queryResultSetIterator = container.GetItemQueryIterator<NoteDetails>(sqldefn);
+
+
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<NoteDetails> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    foreach (var item in currentResultSet)
+                    {
+                        notes.Add(item);
+                    }
+
+                    return notes;
+
                 }
                 return notes;
-
             }
             catch(Exception ex)
             {
@@ -114,9 +163,38 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId)
+        public async Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId)
         {
-            throw new NotImplementedException();
+            if (update == null)
+            {
+                throw new NullReferenceException();
+            }
+            try
+            {
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    ItemResponse<NoteDetails> response = await  container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+                    itembody.Title = update.Title;
+                    itembody.Description = update.Description;
+                    itembody.Image = update.Image;
+                    itembody.Colour = update.Colour;
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+                    return response.Resource;
+
+                }
+                throw new NullReferenceException();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
