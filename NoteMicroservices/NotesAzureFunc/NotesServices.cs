@@ -106,7 +106,6 @@ namespace NoteMicroservices.NotesAzureFunc
                     return new UnauthorizedResult();
                 }
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject<NoteDetails>(requestBody);
                 var result = this.noteRL.GetAllNotesByUserId(authresponse.UserId, authresponse.Email);
                 return new OkObjectResult(result);
             }

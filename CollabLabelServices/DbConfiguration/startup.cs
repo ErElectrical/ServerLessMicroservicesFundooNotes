@@ -2,7 +2,6 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
 using System;
@@ -11,10 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-[assembly : FunctionsStartup(typeof(NoteMicroservices.DbConfiguration.Startup))]
-namespace NoteMicroservices.DbConfiguration
+namespace CollabLabelServices.DbConfiguration
 {
-    public class Startup : FunctionsStartup
+    public class startup : FunctionsStartup
     {
         private static readonly IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
@@ -43,15 +41,14 @@ namespace NoteMicroservices.DbConfiguration
                 return configurationBuilder
                         .Build();
             });
-            
-           
+
+
             builder.Services.AddTransient<INoteRL, NoteRL>();
-            builder.Services.AddTransient<ITokenServices, TokenServices>();
-            builder.Services.AddTransient<IUserRL, UserRL>();
+            builder.Services.AddTransient<ICollabRL, CollabRL>();
+            //builder.Services.AddTransient<ITokenServices, TokenServices>();
+            //builder.Services.AddTransient<IUserRL, UserRL>();
 
 
         }
-
-
     }
 }

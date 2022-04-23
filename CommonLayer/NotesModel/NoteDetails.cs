@@ -11,7 +11,7 @@ namespace CommonLayer.NotesModel
 {
     public class NoteDetails
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id", ReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
 
         public string NoteId { get; set; } = " ";
 
