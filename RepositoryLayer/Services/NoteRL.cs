@@ -1,5 +1,6 @@
 ﻿using CommonLayer.Model;
 using CommonLayer.NotesModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Cosmos;
 using RepositoryLayer.Authorisation;
 using RepositoryLayer.Interface;
@@ -9,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserRegistration.Model;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace RepositoryLayer.Services
 {
@@ -26,6 +29,42 @@ namespace RepositoryLayer.Services
             this.jwt = jwt;
             this.userRL = userRL;
         }
+
+        public async Task<bool> ChangeColour(string colour, string userId, string noteId)
+        {
+            if (userId == null || noteId == null)
+            {
+                throw new Exception("please pass userId and noteId compulsary ");
+            }
+            if(colour == null)
+            {
+                throw new Exception("Please pass colour to change ");
+            }
+
+            try
+            {
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    ItemResponse<NoteDetails> response = await container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+                    itembody.Colour = colour;
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+                    return true;
+                }
+                return false;
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<NoteDetails> CreateNote(NoteDetails details, string userId)
         {
             if (details == null)
@@ -98,7 +137,7 @@ namespace RepositoryLayer.Services
              
         }
 
-        public async Task<List<NoteDetails>> GetAllFundooNotesByUserId(string id, string email)
+        public async Task<List<NoteDetails>> GetAllNotesByUserId(string id, string email)
         {
             List<NoteDetails> notes = new List<NoteDetails>();
             try
@@ -160,6 +199,44 @@ namespace RepositoryLayer.Services
             {
                 throw new Exception(ex.Message);
 
+            }
+        }
+
+        public async Task<bool> IsArchieve(string userId, string noteId)
+        {
+            if (userId == null || noteId == null)
+            {
+                throw new Exception("please pass userId and noteId compulsary ");
+            }
+            try
+            {
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if( document != null)
+                {
+                    ItemResponse<NoteDetails> response = await container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+                    if (document.IsArchieve == true)
+                    {
+                        itembody.IsArchieve = false;
+                    }
+                    if (document.IsArchieve == false)
+                    {
+                        itembody.IsArchieve = true;
+                    }
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
@@ -267,6 +344,59 @@ namespace RepositoryLayer.Services
 
                 }
                 throw new NullReferenceException();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> UploadImage(IFormFile file, string noteId, string userId)
+        {
+            if (userId == null || noteId == null)
+            {
+                throw new Exception("please pass userId and noteId compulsary ");
+            }
+            if(file == null)
+            {
+                throw new Exception("Please upload Image correctly ");
+            }
+
+            try
+            {
+                var CloudinaryData = new CloudinaryDotNet.Cloudinary(new Account
+                {
+                    ApiKey = "489788912754161",
+                    ApiSecret = "SgcAbpkm2vEoafLV5OhtOt_PJiU",
+                    Cloud = "dwwotohwm"
+                });
+
+                Stream s = file.OpenReadStream();
+
+                var imageuploadparams = new ImageUploadParams()
+                {
+                    File = new FileDescription("Test", s)
+                };
+
+                var Result = CloudinaryData.Upload(imageuploadparams);
+
+                var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
+                var document = container.GetItemLinqQueryable<NoteDetails>(true)
+                               .Where(b => b.userId == userId && b.NoteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    ItemResponse<NoteDetails> response = await container.ReadItemAsync<NoteDetails>(document.NoteId, new PartitionKey(document.NoteId));
+                    var itembody = response.Resource;
+                    itembody.Image = Result.Url.ToString();
+                    response = await container.ReplaceItemAsync<NoteDetails>(itembody, itembody.NoteId, new PartitionKey(itembody.NoteId));
+                    return true;
+
+                }
+                return false;
+
 
             }
             catch (Exception ex)

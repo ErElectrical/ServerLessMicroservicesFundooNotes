@@ -73,7 +73,7 @@ namespace RepositoryLayer.Authorisation
                 // Validate the token and decode the claims.
                 claims = new JwtBuilder()
                     .WithAlgorithm(new HMACSHA256Algorithm())
-                    .WithSecret("Your Secret Securtity key string")
+                    .WithSecret("ldbudnsvjdnvbsvhsiksncbcvsgwhkaamcbvbdguhrjfkfnmdnbsvwhkmdbbdhjdm dbbdjdkmdnbbjjkdmsnsbdbh")
                     .MustVerifySignature()
                     .Decode<IDictionary<string, object>>(authorizationHeader);
             }

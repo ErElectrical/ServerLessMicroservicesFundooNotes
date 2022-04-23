@@ -1,4 +1,5 @@
 ﻿using CommonLayer.NotesModel;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace RepositoryLayer.Interface
 
         Task<List<NoteDetails>> GetAllNotes();
 
-        Task<List<NoteDetails>> GetAllFundooNotesByUserId(string id, string email);
+        Task<List<NoteDetails>> GetAllNotesByUserId(string id, string email);
 
         Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId);
 
@@ -22,6 +23,12 @@ namespace RepositoryLayer.Interface
         Task<bool> IsPinned(string userId, string noteId);
 
         Task<bool> IsTrash(string userId, string noteId);
+
+        Task<bool> IsArchieve(string userId, string noteId);
+
+        Task<bool> ChangeColour(string colour, string userId, string noteId);
+
+        Task<bool> UploadImage(IFormFile file, string noteId, string userId);
     }
 
 }
