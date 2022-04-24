@@ -13,6 +13,6 @@ namespace RepositoryLayer.Interface
 
         public Task<List<string>> GetAllCollabByNoteId(string userId, string noteId);
 
-        public Task<bool> RemoveCollab(string noteId, string userId, string CollabEmail);
+        public Task<bool> RemoveCollab(string noteId, string userId, CollabRequest collab);
     }
 }
