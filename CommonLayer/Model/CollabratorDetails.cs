@@ -8,6 +8,8 @@ namespace CommonLayer.Model
 {
     public class CollabratorDetails
     {
+
+        [JsonProperty(PropertyName = "id", ReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
         public string CollabId { get; set; } = " ";
 
         public string CollabEmail { get; set; } = " ";

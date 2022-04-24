@@ -186,5 +186,36 @@ namespace RepositoryLayer.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public UserDetails GetDetailsByEmailId(string email)
+        {
+            UserDetails user = new UserDetails();
+            try
+            {
+                var option = new FeedOptions { EnableCrossPartitionQuery = true };
+
+                var container = this._cosmosClient.GetContainer("FundooNotesDb", "UserDetails");
+                var document = container.GetItemLinqQueryable<UserDetails>(true)
+                               .Where(b => b.Email == email)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if (document != null)
+                {
+                    user.Id = document.Id;
+                    user.FirstName = document.FirstName;
+                    user.LastName = document.LastName;
+                    user.Email = document.Email;
+                    user.Password = document.Password;
+                    user.CreatedAt = document.CreatedAt;
+                    user.ModifiedAt = document.ModifiedAt;
+
+                }
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

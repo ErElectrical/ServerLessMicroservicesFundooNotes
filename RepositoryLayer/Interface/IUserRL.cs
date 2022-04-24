@@ -19,5 +19,7 @@ namespace RepositoryLayer.Interface
         Task<UserDetails> ResetPassword(ResetPassWordDetails details);
 
         UserDetails GetDetailsById(string Id);
+
+        UserDetails GetDetailsByEmailId(string EmailId);
     }
 }

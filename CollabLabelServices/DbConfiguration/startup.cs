@@ -46,7 +46,7 @@ namespace CollabLabelServices.DbConfiguration
             builder.Services.AddTransient<INoteRL, NoteRL>();
             builder.Services.AddTransient<ICollabRL, CollabRL>();
             //builder.Services.AddTransient<ITokenServices, TokenServices>();
-            //builder.Services.AddTransient<IUserRL, UserRL>();
+            builder.Services.AddTransient<IUserRL, UserRL>();
 
 
         }
