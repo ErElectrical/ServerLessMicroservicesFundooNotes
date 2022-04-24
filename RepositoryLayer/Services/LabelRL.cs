@@ -50,5 +50,43 @@ namespace RepositoryLayer.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<string>> GetLabelByNoteId(string noteId, string userId)
+        {
+            if (userId == null || noteId == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            List<string> labelName = new List<string>();
+            try
+            {
+                QueryDefinition sqldefn = new QueryDefinition(
+                   "select * from c where c.userId = @userId and c.noteId = @noteId")
+                   .WithParameter("@userId", userId)
+                   .WithParameter("@noteId", noteId);
+
+                var container = this._cosmosClient.GetContainer("NoteCollabLabelDB", "LabelDetails");
+                using FeedIterator<LabelDetails> queryResultSetIterator = container.GetItemQueryIterator<LabelDetails>(sqldefn);
+
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<LabelDetails> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    foreach (var item in currentResultSet)
+                    {
+                        labelName.Add(item.LabelName);
+                    }
+
+                    return labelName;
+
+                }
+                return labelName;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
