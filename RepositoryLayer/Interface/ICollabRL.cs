@@ -10,5 +10,7 @@ namespace RepositoryLayer.Interface
     public interface ICollabRL
     {
         public Task<CollabratorDetails> CreateCollabrator(string userId,string noteId, CollabRequest collab);
+
+        public Task<List<string>> GetAllNotesByUserId(string userId, string noteId);
     }
 }

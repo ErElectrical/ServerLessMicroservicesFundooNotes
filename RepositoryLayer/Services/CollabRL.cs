@@ -55,5 +55,37 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public async Task<List<string>> GetAllCollabByNoteId(string userId, string noteId)
+        {
+            List<string> CollabEmail = new List<string>();
+            try
+            {
+                QueryDefinition sqldefn = new QueryDefinition(
+                    "select * from c where c.userId = @userId and c.noteId = @noteId")
+                    .WithParameter("@userId", userId)
+                    .WithParameter("@noteId", noteId);
+
+
+                var container = this._cosmosClient.GetContainer("NoteCollabLabelDB", "CollabDetails");
+                using FeedIterator<CollabratorDetails> queryResultSetIterator = container.GetItemQueryIterator<CollabratorDetails>(sqldefn);
+
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<CollabratorDetails> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    foreach (var item in currentResultSet)
+                    {
+                        CollabEmail.Add(item.CollabEmail);
+                    }
+
+                    return CollabEmail;
+
+                }
+                return CollabEmail;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
