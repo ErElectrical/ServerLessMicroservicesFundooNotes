@@ -87,5 +87,41 @@ namespace RepositoryLayer.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<bool> RemoveCollab(string noteId, string userId, string CollabEmail)
+        {
+            if(noteId == null || userId == null)
+            {
+                throw new NullReferenceException();
+            }
+            if(CollabEmail == null)
+            {
+                throw new Exception("Please pass the CollabEmail ");
+            }
+            try
+            {
+                var container = this._cosmosClient.GetContainer("NoteCollabLabelDB", "CollabDetails");
+                var document = container.GetItemLinqQueryable<CollabratorDetails>(true)
+                               .Where(b => b.userId == userId && b.noteId == noteId  && b.CollabEmail == CollabEmail)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if(document != null)
+                {
+                    using (ResponseMessage response = await container.DeleteItemStreamAsync(document.CollabId, new PartitionKey(document.CollabId))) 
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
