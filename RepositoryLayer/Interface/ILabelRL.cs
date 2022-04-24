@@ -14,5 +14,7 @@ namespace RepositoryLayer.Interface
         Task<List<string>> GetLabelByNoteId(string noteId,string userId);
 
         Task<bool> UpdateLabel(string noteId, string userId, LabelRequest label);
+
+        Task<bool> RemoveLabel(string noteId, string userId);
     }
 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserMicroservices", "UserMi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoteMicroservices", "NoteMicroservices\NoteMicroservices.csproj", "{C0AEF9FD-66AB-46EF-864B-6A72A2F8138C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollabLabelServices", "CollabLabelServices\CollabLabelServices.csproj", "{CE34AE1A-11ED-4FCF-AB16-8F4B0946094E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollabLabelServices", "CollabLabelServices\CollabLabelServices.csproj", "{CE34AE1A-11ED-4FCF-AB16-8F4B0946094E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -88,13 +88,13 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<bool> RemoveCollab(string noteId, string userId, string CollabEmail)
+        public async Task<bool> RemoveCollab(string noteId, string userId, CollabRequest collab)
         {
             if(noteId == null || userId == null)
             {
                 throw new NullReferenceException();
             }
-            if(CollabEmail == null)
+            if(collab.Email == null)
             {
                 throw new Exception("Please pass the CollabEmail ");
             }
@@ -102,7 +102,7 @@ namespace RepositoryLayer.Services
             {
                 var container = this._cosmosClient.GetContainer("NoteCollabLabelDB", "CollabDetails");
                 var document = container.GetItemLinqQueryable<CollabratorDetails>(true)
-                               .Where(b => b.userId == userId && b.noteId == noteId  && b.CollabEmail == CollabEmail)
+                               .Where(b => b.userId == userId && b.noteId == noteId  && b.CollabEmail == collab.Email)
                                .AsEnumerable()
                                .FirstOrDefault();
                 if(document != null)

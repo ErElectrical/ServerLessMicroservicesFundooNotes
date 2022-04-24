@@ -89,6 +89,39 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public async Task<bool> RemoveLabel(string noteId, string userId)
+        {
+            if (noteId == null || userId == null)
+            {
+                throw new NullReferenceException();
+            }
+            try
+            {
+                var container = this._cosmosClient.GetContainer("NoteCollabLabelDB", "LabelDetails");
+                var document = container.GetItemLinqQueryable<LabelDetails>(true)
+                               .Where(b => b.userId == userId && b.noteId == noteId)
+                               .AsEnumerable()
+                               .FirstOrDefault();
+                if (document != null)
+                {
+
+                    using (ResponseMessage response = await container.DeleteItemStreamAsync(document.LabelId, new PartitionKey(document.LabelId)))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<bool> UpdateLabel(string noteId, string userId, LabelRequest label)
         {
             if (userId == null || noteId == null)
