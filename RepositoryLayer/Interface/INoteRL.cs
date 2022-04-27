@@ -13,8 +13,7 @@ namespace RepositoryLayer.Interface
         Task<NoteDetails> CreateNote(NoteDetails details,string userId);
 
         Task<List<NoteDetails>> GetAllNotes();
-
-        Task<List<NoteDetails>> GetAllNotesByUserId(string id, string email);
+        Task<NoteDetails> GetAllNoteByNoteId(string noteId, string email);
 
         Task<NoteDetails> UpdateNote(NoteUpdation update, string userId, string noteId);
 

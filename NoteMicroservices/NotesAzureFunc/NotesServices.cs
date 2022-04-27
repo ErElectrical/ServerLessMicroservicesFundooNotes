@@ -90,11 +90,11 @@ namespace NoteMicroservices.NotesAzureFunc
             }
         }
 
-        [FunctionName("GetNotesByUserId")]
+        [FunctionName("GetNotesByNoteId")]
 
-        public async Task<IActionResult> GetNotesByUserId(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log)
+        public async Task<IActionResult> GetNotesByNoteId(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "note/Update/{noteId)")] HttpRequest req,
+            ILogger log,string noteId)
         {
             log.LogInformation("C# HTTP trigger GetAllNotesById function processed a request.");
 
@@ -106,7 +106,7 @@ namespace NoteMicroservices.NotesAzureFunc
                     return new UnauthorizedResult();
                 }
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                var result = this.noteRL.GetAllNotesByUserId(authresponse.UserId, authresponse.Email);
+                var result = this.noteRL.GetAllNoteByNoteId(noteId, authresponse.Email);
                 return new OkObjectResult(result);
             }
             catch (CosmosException cosmosException)

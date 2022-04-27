@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+[assembly: FunctionsStartup(typeof(CollabLabelServices.DbConfiguration.startup))]
 namespace CollabLabelServices.DbConfiguration
 {
     public class startup : FunctionsStartup

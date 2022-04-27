@@ -137,32 +137,20 @@ namespace RepositoryLayer.Services
              
         }
 
-        public async Task<List<NoteDetails>> GetAllNotesByUserId(string id, string email)
+        public async Task<NoteDetails> GetAllNoteByNoteId(string noteId, string email)
         {
             List<NoteDetails> notes = new List<NoteDetails>();
             try
             {
-                QueryDefinition sqldefn = new QueryDefinition(
-                    "select * from c where c.userId = @id and c.Email = @email")
-                    .WithParameter("@id", id)
-                    .WithParameter("@email", email);
+                if (noteId == null)
+                {
+                    throw new NullReferenceException();
+                }
 
                 var container = this._cosmosClient.GetContainer("FundooNotesNoteDb", "NoteDetails");
-                using FeedIterator<NoteDetails> queryResultSetIterator = container.GetItemQueryIterator<NoteDetails>(sqldefn);
+                NoteDetails note = await container.ReadItemAsync<NoteDetails>(noteId, new PartitionKey(noteId));
 
-
-                while (queryResultSetIterator.HasMoreResults)
-                {
-                    FeedResponse<NoteDetails> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    foreach (var item in currentResultSet)
-                    {
-                        notes.Add(item);
-                    }
-
-                    return notes;
-
-                }
-                return notes;
+                return note;
             }
             catch(Exception ex)
             {
